@@ -1,0 +1,11 @@
+[
+  {"Catecode": "CF001", "Catename": "Fastfood"},
+  {"Catecode": "CF002", "Catename": "Pizza"},
+  {"Catecode": "CF003", "Catename": "Cake"},
+  {"Catecode": "CF004", "Catename": "SeaFood"},
+  {"Catecode": "CF005", "Catename": "Drink"},
+  {"Catecode": "CF006", "Catename": "Salad"},
+  {"Catecode": "CF007", "Catename": "Rice"},
+  {"Catecode": "CF008", "Catename": "Chicken"},
+  {"Catecode": "CF009", "Catename": "Beef"}
+]
