@@ -1,0 +1,18 @@
+[
+    {
+        "Hocode": "CF001",
+        "Honame": "Mandarin Oriental",
+        "Checkin":"28/May",
+        "Checkout":"31/May",
+        "Percount":"2",
+        "Price":"900"
+    },
+    {
+        "Hocode": "CF002",
+        "Honame": "Mandarin Oriental",
+        "Checkin":"28/May",
+        "Checkout":"31/May",
+        "Percount":"2",
+        "Price":"900"
+    }
+]

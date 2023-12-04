@@ -1,0 +1,7 @@
+0 Chihuahua
+1 japan
+2 maltese
+3 pekine
+4 shih-tuz
+5 papi
+6 toy
