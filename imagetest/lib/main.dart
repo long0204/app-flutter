@@ -47,6 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 onPressed: () {
                   _captureImage(1);
+                  _initializeImageLabeling(1);
                 },
                 child: Text('Chụp ảnh 1'),
               ),
@@ -54,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 onPressed: () {
                   _captureImage(2);
+                  _initializeImageLabeling(2);
                 },
                 child: Text('Chụp ảnh 2'),
               ),
@@ -64,6 +66,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 child: Text('So sánh'),
               ),
+               SizedBox(height: 20.0),
+            Text('Labels for Image 1: ${labels1.map((label) => label.label).join(', ')}'),
+            SizedBox(height: 20.0),
+            Text('Labels for Image 2: ${labels2.map((label) => label.label).join(', ')}'),
             ],
           ),
         ),
@@ -95,16 +101,6 @@ class _MyHomePageState extends State<MyHomePage> {
             break;
         }
       });
-
-      await _initializeImageLabeling(imageIndex);
-
-      if (imageIndex == 1) {
-        // Chuyển đến trang Scan nếu đang chụp ảnh 1
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ScanPage(image: _image1)),
-        );
-      }
     } else {
       print('Không chụp được ảnh.');
     }
@@ -130,11 +126,18 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _compareImages() {
+   void _compareImages() {
+    if (labels1.isEmpty || labels2.isEmpty) {
+      print('Vui lòng chọn 2 ảnh');
+      return;
+    }
+
     final Set<String> labelsSet1 = labels1.map((label) => label.label).toSet();
     final Set<String> labelsSet2 = labels2.map((label) => label.label).toSet();
 
-    final double similarityPercentage = calculateSimilarityPercentage(labelsSet1, labelsSet2);
+    final Set<String> commonLabels = labelsSet1.intersection(labelsSet2);
+    final double similarityPercentage =
+        (commonLabels.length / labelsSet1.union(labelsSet2).length) * 100;
 
     showDialog(
       context: context,
