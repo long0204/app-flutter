@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:imagetest/scan_controller.dart';
 
 class CameraView extends StatelessWidget {
-  const CameraView({super.key});
+ // const CameraView({super.key});
 
   @override
   Widget build(BuildContext context) {

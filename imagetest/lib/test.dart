@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
@@ -30,62 +31,61 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Image Comparison'),
-      // ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _image1 == null
-                ? Text('Select Image 1')
-                : Image.file(
-                    _image1!,
-                    height: 200.0,
-                  ),
-            SizedBox(height: 20.0),
-            _image2 == null
-                ? Text('Select Image 2')
-                : Image.file(
-                    _image2!,
-                    height: 200.0,
-                  ),
-            SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: () async {
-                await _getImageFromGallery(1);
-                await _initializeImageLabeling(1);
-              },
-              child: Text('Chọn ảnh 1'),
-            ),
-            SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: () async {
-                await _getImageFromGallery(2);
-                await _initializeImageLabeling(2);
-              },
-              child: Text('Chọn ảnh 2'),
-            ),
-            SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: () {
-                _compareImages();
-              },
-              child: Text('So sánh'),
-            ),
-            SizedBox(height: 20.0),
-            Text('Labels for Image 1: ${labels1.map((label) => label.label).join(', ')}'),
-            SizedBox(height: 20.0),
-            Text('Labels for Image 2: ${labels2.map((label) => label.label).join(', ')}'),
-          ],
+      appBar: AppBar(
+        title: Text('Kiểm tra ảnh'),
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildImageWidget(_image1, 'Chưa chụp ảnh 1'),
+              SizedBox(height: 20.0),
+              _buildImageWidget(_image2, 'Chưa chụp ảnh 2'),
+              SizedBox(height: 20.0),
+              ElevatedButton(
+                onPressed: () {
+                  _captureImage(1);
+                },
+                child: Text('Chụp ảnh 1'),
+              ),
+              SizedBox(height: 20.0),
+              ElevatedButton(
+                onPressed: () {
+                  _captureImage(2);
+                },
+                child: Text('Chụp ảnh 2'),
+              ),
+              SizedBox(height: 20.0),
+              ElevatedButton(
+                onPressed: () {
+                  _compareImages();
+                },
+                child: Text('So sánh'),
+              ),
+              // SizedBox(height: 20.0),
+              // Text('Labels for Image 1: ${labels1.map((label) => label.label).join(', ')}'),
+              // SizedBox(height: 20.0),
+              // Text('Labels for Image 2: ${labels2.map((label) => label.label).join(', ')}'),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Future<void> _getImageFromGallery(int imageIndex) async {
+  Widget _buildImageWidget(File? image, String placeholder) {
+    return image == null
+        ? Text(placeholder)
+        : Image.file(
+            image,
+            height: 200.0,
+          );
+  }
+
+  Future<void> _captureImage(int imageIndex) async {
     final imagePicker = ImagePicker();
-    final pickedFile = await imagePicker.getImage(source: ImageSource.gallery);
+    final pickedFile = await imagePicker.getImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
       setState(() {
@@ -98,24 +98,16 @@ class _MyHomePageState extends State<MyHomePage> {
             break;
         }
       });
+
+      await _initializeImageLabeling(imageIndex);
     } else {
-      print('Không có ảnh nào được chọn.');
+      print('Không chụp được ảnh.');
     }
   }
 
   Future<void> _initializeImageLabeling(int imageIndex) async {
-    if (imageIndex == 1) {
-      await _processImageLabels(_image1, labels1);
-    } else if (imageIndex == 2) {
-      await _processImageLabels(_image2, labels2);
-    }
-  }
-
-  Future<void> _processImageLabels(File? imageFile, List<ImageLabel> labels) async {
-    if (imageFile == null) {
-      print('Không có ảnh nào được chọn');
-      return;
-    }
+    final List<ImageLabel> labels = imageIndex == 1 ? labels1 : labels2;
+    final File imageFile = imageIndex == 1 ? _image1! : _image2!;
 
     final ImageLabeler labeler = GoogleMlKit.vision.imageLabeler();
     final inputImage = InputImage.fromFilePath(imageFile.path);
@@ -127,24 +119,17 @@ class _MyHomePageState extends State<MyHomePage> {
         labels.addAll(detectedLabels);
       });
     } catch (e) {
-      print("Error during image labeling: $e");
+      print("Lỗi ảnh: $e");
     } finally {
       await labeler.close();
     }
   }
 
   void _compareImages() {
-    if (labels1.isEmpty || labels2.isEmpty) {
-      print('Vui lòng chọn 2 ảnh');
-      return;
-    }
-
     final Set<String> labelsSet1 = labels1.map((label) => label.label).toSet();
     final Set<String> labelsSet2 = labels2.map((label) => label.label).toSet();
 
-    final Set<String> commonLabels = labelsSet1.intersection(labelsSet2);
-    final double similarityPercentage =
-        (commonLabels.length / labelsSet1.union(labelsSet2).length) * 100;
+    final double similarityPercentage = calculateSimilarityPercentage(labelsSet1, labelsSet2);
 
     showDialog(
       context: context,
@@ -163,5 +148,16 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       },
     );
+  }
+
+  double calculateSimilarityPercentage(Set<String> set1, Set<String> set2) {
+    if (set1.isEmpty || set2.isEmpty) {
+      return 0.0;
+    }
+
+    final Set<String> commonLabels = set1.intersection(set2);
+    final double similarityPercentage = (commonLabels.length / set1.union(set2).length) * 100;
+
+    return similarityPercentage;
   }
 }
