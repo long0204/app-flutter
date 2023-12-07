@@ -1,218 +1,170 @@
-import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 
-class MapWidget extends StatefulWidget {
-  final String accountName;
-  final String accountEmail;
-  final List<Map<String, String>> hotelList;
-
-  MapWidget({required this.accountName, required this.accountEmail, required this.hotelList});
-
-  @override
-  _MapWidgetState createState() => _MapWidgetState();
+void main() {
+  runApp(MyApp());
 }
 
-class _MapWidgetState extends State<MapWidget> {
-  Completer<GoogleMapController> _controller = Completer();
-  TextEditingController _searchController1 = TextEditingController();
-  TextEditingController _searchController2 = TextEditingController();
-  Set<Marker> _markers = Set<Marker>();
-  Polyline? _polyline;
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: MapScreen(),
+    );
+  }
+}
+
+class MapScreen extends StatefulWidget {
+  @override
+  _MapScreenState createState() => _MapScreenState();
+}
+
+class _MapScreenState extends State<MapScreen> {
+  late GoogleMapController mapController;
+  TextEditingController startAddressController = TextEditingController();
+  TextEditingController destinationAddressController = TextEditingController();
+  Set<Marker> markers = {};
+  Set<Polyline> polylines = {};
+  List<LatLng> polylineCoordinates = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        //title: Text('Map with Search'),
-        toolbarHeight: 2,
-      ),
-      body: Stack(
+      // appBar: AppBar(
+      //   title: Text('Map Example'),
+      // ),
+      body: Column(
         children: [
-          SizedBox(height: 30.0),
-          GoogleMap(
-            mapType: MapType.normal,
-            initialCameraPosition: CameraPosition(
-              target: LatLng(37.7749, -122.4194),
-              zoom: 12.0,
-            ),
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-            },
-            markers: _markers,
-            polylines: _polyline != null ? {_polyline!} : {},
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController1,
-                      decoration: InputDecoration(
-                        hintText: 'Enter location 1',
-                      ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: startAddressController,
+                    decoration: InputDecoration(
+                      labelText: 'Điểm bắt đầu',
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () {
-                      searchLocation(_searchController1.text, 1);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            top: 50,
-            left: 0,
-            right: 0,
-            child: Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController2,
-                      decoration: InputDecoration(
-                        hintText: 'Enter location 2',
-                      ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    controller: destinationAddressController,
+                    decoration: InputDecoration(
+                      labelText: 'Điểm kết thúc',
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () {
-                      searchLocation(_searchController2.text, 2);
-                    },
-                  ),
-                ],
-              ),
+                ),
+                
+              ],
             ),
+          ),
+          Expanded(
+            child: GoogleMap(
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: CameraPosition(
+                target: LatLng(37.7749, -122.4194), // Default: San Francisco
+                zoom: 12,
+              ),
+              markers: markers,
+              polylines: polylines,
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => _onButtonPress(),
+            child: Text('Tìm đường'),
           ),
         ],
       ),
     );
   }
 
-  Future<void> searchLocation(String query, int markerNumber) async {
-    try {
-      List<Location> locations = await locationFromAddress(query);
-      if (locations.isNotEmpty) {
-        Location location = locations.first;
-        Placemark placemark = (await placemarkFromCoordinates(
-          location.latitude,
-          location.longitude,
-        ))[0];
-
-        _updateMarkers(location, markerNumber, placemark);
-        _moveToLocation(location);
-      } else {
-        print('No location found');
-      }
-    } catch (e) {
-      print('Error searching location: $e');
-    }
-  }
-
-  void _updateMarkers(Location location, int markerNumber, Placemark placemark) {
+  void _onMapCreated(GoogleMapController controller) {
+    if (!mounted) return; // Check if the widget is still in the tree
     setState(() {
-      _markers.removeWhere((marker) => marker.markerId.value == 'location$markerNumber');
-      _markers.add(
-        Marker(
-          markerId: MarkerId('location$markerNumber'),
-          position: LatLng(location.latitude, location.longitude),
-          infoWindow: InfoWindow(
-            title: 'Location $markerNumber',
-            snippet: placemark.name ?? '',
-          ),
-        ),
-      );
-      if (_markers.length == 2) {
-        _drawPolyline();
-      }
+      mapController = controller;
     });
-    
   }
 
-  Future<void> _moveToLocation(Location location) async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: LatLng(location.latitude, location.longitude),
-          zoom: 14.0,
-        ),
+  void _onButtonPress() async {
+    String startAddress = startAddressController.text;
+    String destinationAddress = destinationAddressController.text;
+
+    List<Location> startLocations = await locationFromAddress(startAddress);
+    List<Location> destinationLocations =
+        await locationFromAddress(destinationAddress);
+
+    LatLng startLatLng =
+        LatLng(startLocations[0].latitude, startLocations[0].longitude);
+    LatLng destinationLatLng = LatLng(
+        destinationLocations[0].latitude, destinationLocations[0].longitude);
+    print("2 Điểm ${startLatLng} ${destinationLatLng}");
+    // Clear existing markers and polylines
+    markers.clear();
+    polylines.clear();
+    polylineCoordinates.clear();
+
+    // Add markers for start and destination
+    markers.add(Marker(
+      markerId: MarkerId('start'),
+      position: startLatLng,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+      infoWindow: InfoWindow(
+        title: 'Start',
+        snippet: startAddress,
       ),
-    );
-  }
+    ));
 
-  void _drawPolyline() async {
-  PolylinePoints polylinePoints = PolylinePoints();
-  List<LatLng> polylineCoordinates = _markers.map((marker) {
-    return LatLng(marker.position.latitude, marker.position.longitude);
-  }).toList();
+    markers.add(Marker(
+      markerId: MarkerId('destination'),
+      position: destinationLatLng,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      infoWindow: InfoWindow(
+        title: 'Destination',
+        snippet: destinationAddress,
+      ),
+    ));
 
-  try {
+    // Get polyline coordinates
+    PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      "AIzaSyBisRTGrVPSBHcazddG3Lh80Be-n9iNej4",
-      PointLatLng(polylineCoordinates[0].latitude, polylineCoordinates[0].longitude),
-      PointLatLng(polylineCoordinates[1].latitude, polylineCoordinates[1].longitude),
+      'AIzaSyBisRTGrVPSBHcazddG3Lh80Be-n9iNej4', // Replace with your Google Maps API key
+      PointLatLng(startLatLng.latitude, startLatLng.longitude),
+      PointLatLng(destinationLatLng.latitude, destinationLatLng.longitude),
     );
-
+    print("Số điểm ${result.points}");
     if (result.points.isNotEmpty) {
-      setState(() {
-        _polyline = Polyline(
-          polylineId: PolylineId('route'),
-          color: Colors.blue,
-          points: result.points
-              .map((PointLatLng point) => LatLng(point.latitude, point.longitude))
-              .toList(),
-          width: 5,
-        );
-
-        // Adjust camera position to show both markers
-        _adjustCameraPosition(polylineCoordinates);
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
     }
-  } catch (e) {
-    print('Error drawing polyline: $e');
+
+    // Draw polyline on the map
+    setState(() {
+      Polyline polyline = Polyline(
+        polylineId: PolylineId('route'),
+        color: Colors.blue,
+        points: polylineCoordinates,
+      );
+      polylines.add(polyline);
+    });
+
+    // Adjust camera position to show both markers
+    double minLat = min(startLatLng.latitude, destinationLatLng.latitude);
+    double maxLat = max(startLatLng.latitude, destinationLatLng.latitude);
+    double minLng = min(startLatLng.longitude, destinationLatLng.longitude);
+    double maxLng = max(startLatLng.longitude, destinationLatLng.longitude);
+
+    LatLngBounds bounds = LatLngBounds(
+      southwest: LatLng(minLat, minLng),
+      northeast: LatLng(maxLat, maxLng),
+    );
+
+    mapController.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50.0));
   }
-}
-
-void _adjustCameraPosition(List<LatLng> polylineCoordinates) async {
-  double minLat = polylineCoordinates[0].latitude;
-  double minLng = polylineCoordinates[0].longitude;
-  double maxLat = polylineCoordinates[0].latitude;
-  double maxLng = polylineCoordinates[0].longitude;
-
-  for (LatLng point in polylineCoordinates) {
-    if (point.latitude < minLat) minLat = point.latitude;
-    if (point.latitude > maxLat) maxLat = point.latitude;
-    if (point.longitude < minLng) minLng = point.longitude;
-    if (point.longitude > maxLng) maxLng = point.longitude;
-  }
-
-  double padding = 50.0; // Adjust the padding as needed
-
-  final GoogleMapController controller = await _controller.future;
-  controller.animateCamera(
-    CameraUpdate.newLatLngBounds(
-      LatLngBounds(
-        southwest: LatLng(minLat, minLng),
-        northeast: LatLng(maxLat, maxLng),
-      ),
-      padding,
-    ),
-  );
-}
 
 }
