@@ -1,0 +1,14 @@
+[
+    {
+        "reportcode":"001",
+        "reportname":"Báo cáo cuộc gọi"
+    },
+    {
+        "reportcode":"002",
+        "reportname":"Báo cáo eTicket"
+    },
+    {
+        "reportcode":"002",
+        "reportname":"Báo cáo chiến dịch"
+    }
+]

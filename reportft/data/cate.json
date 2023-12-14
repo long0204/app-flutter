@@ -1,0 +1,46 @@
+[
+    {
+        "reportcode":"001",
+        "reportscreen":"Báo cáo thông kê cuộc gọi"
+    },
+    {
+        "reportcode":"002",
+        "reportscreen":"Báo cáo tổng hợp eTicket"
+    },
+    {
+        "reportcode":"002",
+        "reportscreen":"Báo cáo chi tiết eTicket"
+    },
+    {
+        "reportcode":"002",
+        "reportscreen":"Báo cáo API theo SLA"
+    },
+    {
+        "reportcode":"002",
+        "reportscreen":"Báo cáo cuộc gọi nhỡ"
+    },
+    {
+        "reportcode":"002",
+        "reportscreen":"Báo cáo tổng hợp loại eTicket"
+    },
+    {
+        "reportcode":"002",
+        "reportscreen":"Báo cáo biến động eTicket"
+    },
+    {
+        "reportcode":"001",
+        "reportscreen":"Báo cáo tổng hợp eTicket không đáp ứng SLA"
+    },
+    {
+        "reportcode":"002",
+        "reportscreen":"Báo cáo tổng hợp eTicket không đáp ứng SLA theo Agent"
+    },
+    {
+        "reportcode":"003",
+        "reportscreen":"Báo cáo tổng hợp chiến dịch"
+    },
+    {
+        "reportcode":"003",
+        "reportscreen":"Báo cáo chi tiết chiến dịch"
+    }
+]

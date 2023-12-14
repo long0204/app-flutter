@@ -1,0 +1,55 @@
+
+[
+    {
+        "typecallcode":"001",
+        "typecallname":"Tổng cuộc gọi"
+    },
+    {
+        "typecallcode":"002",
+        "typecallname":"Tổng cuộc gọi vào"
+    },
+    {
+        "typecallcode":"003",
+        "typecallname":"tổng cuộc gọi ra"
+    },
+    {
+        "typecallcode":"004",
+        "typecallname":"tổng cuộc gọi vào thành công"
+    },
+    {
+        "typecallcode":"005",
+        "typecallname":"tổng cuộc gọi ra thành công"
+    },
+    {
+        "typecallcode":"006",
+        "typecallname":"tổng cuộc gọi vào nhỡ"
+    },
+    {
+        "typecallcode":"007",
+        "typecallname":"tổng cuộc gọi ra nhỡ"
+    },
+    {
+        "typecallcode":"008",
+        "typecallname":"tổng thời gian nghe máy"
+    },
+    {
+        "typecallcode":"009",
+        "typecallname":"tổng thời gian cuộc gọi vào"
+    },
+    {
+        "typecallcode":"010",
+        "typecallname":"tổng thời gian cuộc gọi ra"
+    },
+    {
+        "typecallcode":"011",
+        "typecallname":"Trung bình thời gian cuộc gọi"
+    },
+    {
+        "typecallcode":"012",
+        "typecallname":"Trung bình thời gian đợi"
+    },
+    {
+        "typecallcode":"013",
+        "typecallname":"Trung bình thời gian giữ máy"
+    }
+]
