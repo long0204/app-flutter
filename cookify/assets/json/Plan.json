@@ -1,0 +1,80 @@
+[
+    {
+        "Day": "Mon",
+        "Bfcode": "CFSL001",
+        "Luchcode": "CFSL003",
+        "Snackcode": "CFSL005",
+        "Dinnercode": "CFSL002",
+        "Bftime": "6.30",
+        "Lunchtime": "6.30",
+        "Snacktime": "6.30",
+        "Dinnertime": "6.30"
+      },
+      {
+        "Day":"Tue",
+       "Bfcode": "CFSL001",
+        "Luchcode": "CFSL002",
+        "Snackcode": "CFSL003",
+        "Dinnercode": "CFSL004",
+        "Bftime":"6.30",
+        "Lunchtime":"6.30",
+        "Snacktime":"6.30",
+        "Dinnertime": "6.30"
+      },
+      {
+        "Day":"Wed",
+      "Bfcode": "CFSL005",
+        "Luchcode": "CFSL006",
+        "Snackcode": "CFSL007",
+        "Dinnercode": "CFSL008",
+        "Bftime":"6.30",
+        "Lunchtime":"6.30",
+        "Snacktime":"6.30",
+        "Dinnertime": "6.30"
+      },
+      {
+        "Day":"Thu",
+       "Bfcode": "CFSL008",
+        "Luchcode": "CFSL005",
+        "Snackcode": "CFSL002",
+        "Dinnercode": "CFSL004",
+        "Bftime":"6.30",
+        "Lunchtime":"6.30",
+        "Snacktime":"6.30",
+        "Dinnertime": "6.30"
+      },
+      {
+        "Day":"Fri",
+        "Bfcode": "CFSL007",
+        "Luchcode": "CFSL008",
+        "Snackcode": "CFSL001",
+        "Dinnercode": "CFSL003",
+        "Bftime":"6.30",
+        "Lunchtime":"6.30",
+        "Snacktime":"6.30",
+        "Dinnertime": "6.30"
+      },
+      {
+        "Day":"Sat",
+       "Bfcode": "CFSL008",
+        "Luchcode": "CFSL004",
+        "Snackcode": "CFSL006",
+        "Dinnercode": "CFSL002",
+        "Bftime":"6.30",
+        "Lunchtime":"6.30",
+        "Snacktime":"6.30",
+        "Dinnertime": "6.30"
+      },
+      {
+        "Day":"Sun",
+       "Bfcode": "CFSL001",
+        "Luchcode": "CFSL005",
+        "Snackcode": "CFSL007",
+        "Dinnercode": "CFSL005",
+        "Bftime":"6.30",
+        "Lunchtime":"6.30",
+        "Snacktime":"6.30",
+        "Dinnertime": "6.30"
+      } 
+  ]
+  
