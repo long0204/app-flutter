@@ -1,0 +1,41 @@
+[
+  {
+    "Catecode" :"CF006",
+    "Productcode": "CFSL001",
+    "Calories": "250",
+    "Carbo": "30",
+    "Protein": "9",
+    "Ingerdients": "2cups pecant",
+    "Preparation": "Thành phố Hà Nội",
+    "VA": "80",
+    "VB": "16",
+    "WA": "97 ",
+    "Imagecode": "watersalad"
+  },
+  {
+    "Catecode" :"CF006",
+    "Productcode": "CFSL002",
+    "Calories": "200",
+    "Carbo": "20",
+    "Protein": "5",
+    "Ingerdients": "1cups pecant",
+    "Preparation": "Thành phố Hà Nội",
+    "VA": "20",
+    "VB": "26",
+    "WA": "9 ",
+    "Imagecode": "crsalad"
+  },
+  {
+    "Catecode" :"CF007",
+    "Productcode": "CFSL003",
+    "Calories": "350",
+    "Carbo": "40",
+    "Protein": "11",
+    "Ingerdients": "3cups pecant",
+    "Preparation": "Thành phố Hà Nội",
+    "VA": "60",
+    "VB": "36",
+    "WA": "27 ",
+    "Imagecode": "bosalad"
+  }
+]
