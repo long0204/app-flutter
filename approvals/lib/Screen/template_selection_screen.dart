@@ -135,7 +135,7 @@ class TemplateSelectionScreen extends StatelessWidget {
                             ? Colors.deepOrange[700]
                             : template['Icon'] == Icons.domain
                             ? Colors.green
-                            : template['Icon'] == Icons.all_inbox
+                            : template['Icon  '] == Icons.all_inbox
                             ? Colors.red
                             : template['Icon'] == Icons.airplanemode_active
                             ? Colors.blue

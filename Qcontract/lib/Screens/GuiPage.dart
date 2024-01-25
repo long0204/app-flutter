@@ -42,10 +42,7 @@ class _GuiHopDongPageState extends State<GuiHopDongPage> {
         } else {
           return user;
         }
-      })
-          .toList();
-
-      // Trigger a rebuild of the ContractManagementPage with the updated data
+      }).toList();
       Navigator.pop(context, updatedContractsUser);
 
       // Show a success message

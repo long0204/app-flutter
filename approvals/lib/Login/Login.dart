@@ -142,7 +142,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  prefixIcon: Icon(Icons.email, color: Colors.green),
+                  prefixIcon: Icon(Icons.email,
+                      color: Colors.green),
                 ),
               ),
               if (checkLoginPress && !isEmailEntered)
@@ -163,7 +164,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: !_passwordVisible,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    prefixIcon: Icon(Icons.lock, color: Colors.green),
+                    prefixIcon: Icon(Icons.lock,
+                        color: Colors.green),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _passwordVisible

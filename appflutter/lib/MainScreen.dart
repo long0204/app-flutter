@@ -1202,7 +1202,7 @@ class _RandomItemAppState extends State<RandomItemApp>
                                     ),
                                   ],
                                 ),
-
+  
                                 SizedBox(height: 8),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

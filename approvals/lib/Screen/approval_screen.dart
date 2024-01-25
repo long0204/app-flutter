@@ -271,7 +271,8 @@ class _ApprovalScreenState extends State<ApprovalScreen> {
                                     decoration: BoxDecoration(
                                       color: lstapproval[index]["ApprvStatus"] == 'REJECT' ? Colors.red[100] :
                                       lstapproval[index]["ApprvStatus"] == 'APPROVED' ? Colors.blue[100] :
-                                      lstapproval[index]["ApprvStatus"] == 'REQUESTED' ? Colors.orangeAccent[100] : Colors.yellowAccent[100],
+                                      lstapproval[index]["ApprvStatus"] == 'REQUESTED' ? Colors.orangeAccent[100]
+                                          : Colors.yellowAccent[100],
                                       borderRadius: BorderRadius.circular(8.0),
                                     ),
                                     child: Text(
@@ -279,7 +280,8 @@ class _ApprovalScreenState extends State<ApprovalScreen> {
                                       style: TextStyle(
                                           color: lstapproval[index]["ApprvStatus"] == 'REJECT' ? Colors.red :
                                           lstapproval[index]["ApprvStatus"] == 'APPROVED' ? Colors.blue :
-                                          lstapproval[index]["ApprvStatus"] == 'REQUESTED' ? Colors.orange : Colors.yellow[800],
+                                          lstapproval[index]["ApprvStatus"] == 'REQUESTED' ? Colors.orange
+                                              : Colors.yellow[800],
                                           fontSize: 14),
                                     ),
                                   ),

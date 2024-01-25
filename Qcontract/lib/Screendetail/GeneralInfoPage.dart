@@ -118,7 +118,6 @@ class GeneralInfoPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      //Text('${contractChannel[0].ChannelType}',style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Colors.black),),
                     ],
                   ),
                   SizedBox(height: 8,),
